@@ -40,9 +40,9 @@ describe('SetLevelTreeDate', () => {
       id: 2,
       pid: -1
     }]
-  const targetArr = new SetLevelTreeDate(deepCope(arr))
+  const targetArr = new SetLevelTreeDate(deepCope(arr), 'id', 'pid')
   it('item has key treeDataValueRange', () => {
     const hasTreeDataValueRange = targetArr.every(item => item?.hasOwnProperty('treeDataValueRange'))
-    expect(hasTreeDataValueRange).be.equal(1)
+    expect(hasTreeDataValueRange).be.equal(true)
   })
 })
