@@ -42,6 +42,23 @@ const SetLevelTreeDataRelationshipBySpreadsheetModel = function (arr, idKey, par
     // 父级_id没有出现的元素
     const waitItemsObj = {}
 
+    const addWaitItemsObj = () => {
+      Object.keys(waitItemsObj).forEach((pidKey) => {
+        if (addedItemsObj[pidKey]) {
+          addTreeDataItemLevel.call(
+            this.likeSpreadsheetArr,
+            waitItemsObj[pidKey]._id,
+            addedItemsObj[pidKey].level + 1
+          )
+          addedItemsObj[waitItemsObj[pidKey]._id] = Object.assign(waitItemsObj[pidKey], {
+            level: addedItemsObj[pidKey].level + 1
+          })
+          addedItemsObj[pidKey].children = (addedItemsObj[pidKey].children || []).concat(waitItemsObj[pidKey]._id)
+          delete waitItemsObj[pidKey]
+        }
+      })
+    }
+
     arr.forEach(({
       _id, _pid
     }) => {
@@ -55,18 +72,8 @@ const SetLevelTreeDataRelationshipBySpreadsheetModel = function (arr, idKey, par
         }, {
           level: curItemLevel
         })
-        if (waitItemsObj[_id]) {
-          addTreeDataItemLevel.call(
-            this.likeSpreadsheetArr,
-            waitItemsObj[_id]._id,
-            addedItemsObj[_id].level + 1
-          )
-          addedItemsObj[_id] = Object.assign(waitItemsObj[_id], {
-            level: addedItemsObj[_id].level + 1
-          })
-          delete waitItemsObj[_id]
-        }
         if (addedItemsObj[_pid]) addedItemsObj[_pid].children = (addedItemsObj[_pid].children || []).concat(_id)
+        addWaitItemsObj()
       } else {
         waitItemsObj[_pid] = {
           _id,
