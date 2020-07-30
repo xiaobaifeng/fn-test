@@ -1,9 +1,6 @@
-import { isArray } from '@/libs/jsTypeUtil'
+import clonedeep from 'lodash.clonedeep'
 
-// 深拷贝
-const deepCope = obj => {
-  return JSON.parse(JSON.stringify(obj))
-}
+import { isArray } from '@/libs/jsTypeUtil'
 
 /**
  * 一维并且每个元素都不是引用类型数组的判断
@@ -118,7 +115,7 @@ const getArrayTailNaEIndex = arr => {
  * @param {[[]]} target2dArrays [1dArray,...]
  */
 const arrayAssign1d = (...target1dArrays) => {
-  const args = deepCope(target1dArrays)
+  const args = clonedeep(target1dArrays)
   if (args.some(arg => !isArray(arg))) {
     throw new Error('type of oneArg is not array')
   }
@@ -140,7 +137,7 @@ const arrayAssign1d = (...target1dArrays) => {
  * @param {} target2dArrays [2dArray,...]
  */
 const arrayAssign2d = (...target2dArrays) => {
-  const args = deepCope(target2dArrays)
+  const args = clonedeep(target2dArrays)
   if (args.some(arg => !is2dArray(arg))) {
     throw new Error('one of target2dArrays is not a strict 2dArray')
   }
@@ -190,7 +187,7 @@ const isEqual2dArray = (firstArray, second2dArray) => {
 }
 
 export {
-  deepCope,
+  clonedeep,
   is1dArray,
   is2dArray,
   isEff1dArray,
