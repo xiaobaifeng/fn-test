@@ -1,5 +1,16 @@
-// import Handsontable from 'handsontable'
+import Handsontable from 'handsontable'
+import { arrayAssign2d } from './arrayUtils'
 
+/**
+ * 转置
+ * @param {[[String | Number]]} arr
+ * @return {[[String | Number]]}
+ */
+function transposition (arr) {
+  return arr[0].map((item, index) => {
+    return arr.map(ele => ele[index])
+  })
+}
 /**
  * 通过二维数组模型解决获取树形平铺数据节点关系
  * (x, y):(rowIndex, colIndex)
@@ -81,74 +92,108 @@ const SetLevelTreeDataRelationshipBySpreadsheetModel = function (arr, idKey, par
         }
       }
     })
-    function getEndIndex (id) {
-      return !addedItemsObj[id].children
-        ? addedItemsObj[id].index
-        : addedItemsObj[id].index + addedItemsObj[id].children.reduce(
-          (acc, item) => Math.max(acc, getEndIndex(item)), 0
-        )
+
+    /**
+     * 非叶子节点第二次出现为undefined
+     * @param {[String | Number]} baseNode 
+     * @param {Number} index 
+     * @return {[String | Number | undefined]}
+     */
+    function getNotRepectBaseNode(baseNode, index) {
+      return baseNode.length > 0 && index === 0 
+        ? baseNode
+        : baseNode.fill()
     }
-    function getChildrenMaxLevel (id) {
-      return !addedItemsObj[id].children
-        ? addedItemsObj[id].level
-        : addedItemsObj[id].children.reduce(
-          (acc, item) => Math.max(acc, getChildrenMaxLevel(item)), 0
-        )
+    
+    /**
+     * 
+     * @param {[String | Number]} idArr 
+     * @param {[String | Number | [String | Number]]} baseNode
+     * @return {[[String | Number]]}
+     */
+    function getTreeArr (idArr, baseNode = []) { 
+      return idArr.map(id => addedItemsObj[id]).reduce((acc, item, index) => {
+        const { _id } = item
+        const oneRootNodeTreeArr = !item.children
+          ? [getNotRepectBaseNode(baseNode, index).concat(_id)]
+          : getTreeArr(item.children, baseNode.concat(_id))
+        return acc.concat(oneRootNodeTreeArr)
+      }, [])
     }
-    this.likeSpreadsheetArr.forEach((equalLevelIds, level) => {
-      equalLevelIds.forEach((id, index, array) => {
-        addedItemsObj[id].index = index
-      })
-    })
-    Object.keys(addedItemsObj).forEach(idKey => {
-      addedItemsObj[Number(idKey)].endIndex = getEndIndex(Number(idKey))
-      addedItemsObj[Number(idKey)].childrenMaxLevel = getChildrenMaxLevel(Number(idKey))
-    })
+    const treeArr = getTreeArr(this.likeSpreadsheetArr[0])
+    console.log('treeArr: ', treeArr)
+    
+    // ele[0] = undefined
+    let emptySpreadsheetData = Handsontable.helper.createEmptySpreadsheetData(
+      treeArr.length,
+      this.likeSpreadsheetArr.length // treeArr里子数组的最大长度
+    ).map(ele => ele.fill())
+    console.log('emptySpreadsheetData: ', emptySpreadsheetData)
+    const spreadsheetTreeArr = arrayAssign2d(emptySpreadsheetData, treeArr)
+    console.log('spreadsheetTreeArr: ', spreadsheetTreeArr)
+    console.log('transposition(spreadsheetTreeArr): ', transposition(spreadsheetTreeArr))
+    // function getEndIndex (id) {
+    //   return !addedItemsObj[id].children
+    //     ? addedItemsObj[id].index
+    //     : addedItemsObj[id].index + addedItemsObj[id].children.reduce(
+    //       (acc, item) => Math.max(acc, getEndIndex(item)), 0
+    //     )
+    // }
+    // function getChildrenMaxLevel (id) {
+    //   return !addedItemsObj[id].children
+    //     ? addedItemsObj[id].level
+    //     : addedItemsObj[id].children.reduce(
+    //       (acc, item) => Math.max(acc, getChildrenMaxLevel(item)), 0
+    //     )
+    // }
+    // this.likeSpreadsheetArr.forEach((equalLevelIds, level) => {
+    //   equalLevelIds.forEach((id, index, array) => {
+    //     addedItemsObj[id].index = index
+    //   })
+    // })
+    // Object.keys(addedItemsObj).forEach(idKey => {
+    //   addedItemsObj[Number(idKey)].endIndex = getEndIndex(Number(idKey))
+    //   addedItemsObj[Number(idKey)].childrenMaxLevel = getChildrenMaxLevel(Number(idKey))
+    // })
     // let emptySpreadsheetData = Handsontable.helper.createEmptySpreadsheetData(
     //   Math.max.apply(null, Object.values(addedItemsObj).map(item => item.childrenMaxLevel)),
     //   Object.values(addedItemsObj).map(item => item.endIndex - item.index + 1).reduce((acc, item) => acc + item, 0)
     // )
-    function getRootNodeById (id) {
-      return addedItemsObj[id].level === 0
-        ? addedItemsObj[id]
-        : getRootNodeById(addedItemsObj[id]._pid)
-    }
-    const getRootNodeBaseIndex = (id) => {
-      const rootNodeIndex = this.likeSpreadsheetArr[0].indexOf(getRootNodeById(id)._id)
-      const rootNodeBaseIndex = rootNodeIndex > 0
-        ? this.likeSpreadsheetArr[0]
-          .slice(0, rootNodeIndex)
-          .map(item => addedItemsObj[item].endIndex - addedItemsObj[item].index + 1)
-          .reduce((acc, item) => acc + item, 0)
-        : 0
-      return rootNodeBaseIndex
-    }
+    // function getRootNodeById (id) {
+    //   return addedItemsObj[id].level === 0
+    //     ? addedItemsObj[id]
+    //     : getRootNodeById(addedItemsObj[id]._pid)
+    // }
+    // const getRootNodeBaseIndex = (id) => {
+    //   const rootNodeIndex = this.likeSpreadsheetArr[0].indexOf(getRootNodeById(id)._id)
+    //   const rootNodeBaseIndex = rootNodeIndex > 0
+    //     ? this.likeSpreadsheetArr[0]
+    //       .slice(0, rootNodeIndex)
+    //       .map(item => addedItemsObj[item].endIndex - addedItemsObj[item].index + 1)
+    //       .reduce((acc, item) => acc + item, 0)
+    //     : 0
+    //   return rootNodeBaseIndex
+    // }
 
-    this.newArr = arr.map(item => {
-      const rootNodeIndex = getRootNodeBaseIndex(item.id)
-      return {
-        ...item,
-        // startRowIndex: addedItemsObj[item.id].level,
-        // startColIndex: getRootNodeBaseIndex(item.id) + addedItemsObj[item.id].index,
-        // endRowIndex: addedItemsObj[item.id].childrenMaxLevel,
-        // endColIndex: getRootNodeBaseIndex(item.id) + addedItemsObj[item.id].endIndex,
-        treeDataValueRange: [
-          addedItemsObj[item.id].level,
-          rootNodeIndex + addedItemsObj[item.id].index,
-          addedItemsObj[item.id].childrenMaxLevel,
-          rootNodeIndex + addedItemsObj[item.id].endIndex
-        ]
-      }
-    })
-    // console.log('addedItemsObj', addedItemsObj)
-    // console.log('newArr', newArr)
+  //   this.newArr = arr.map(item => {
+  //     const rootNodeIndex = getRootNodeBaseIndex(item.id)
+  //     return {
+  //       ...item,
+  //       treeDataValueRange: [
+  //         addedItemsObj[item.id].level,
+  //         rootNodeIndex + addedItemsObj[item.id].index,
+  //         addedItemsObj[item.id].childrenMaxLevel,
+  //         rootNodeIndex + addedItemsObj[item.id].endIndex
+  //       ]
+  //     }
+  //   })
   }
   this.create()
   this.init()
-  this.destroySpreadsheetModel()
-  this.destroy()
-  // 临时
-  return this.newArr
+  // this.destroySpreadsheetModel()
+  // this.destroy()
+  return this
+  // return this.newArr
 }
 
 export {
