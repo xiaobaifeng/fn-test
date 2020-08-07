@@ -27,7 +27,7 @@ function DescLevelTreeData (arr, idKey, parentIdKey) {
   this.idKey = idKey || 'id'
   this.parentIdKey = parentIdKey || 'parentId'
   this.sourceData = clonedeep(arr)
-  this.spreadsheetData = arr
+  this.data = arr
   this.ItemsMap = null
   this.spreadsheetTreeArr = null
 }
@@ -36,14 +36,14 @@ DescLevelTreeData.prototype.destroySpreadsheetModel = function () {
   delete this.likeSpreadsheetArr
 }
 DescLevelTreeData.prototype.create = function () {
-  this.spreadsheetData.forEach(item => {
+  this.data.forEach(item => {
     item._id = item[this.idKey]
     item._pid = item[this.parentIdKey]
     return item
   })
 }
 DescLevelTreeData.prototype.destroy = function () {
-  this.spreadsheetData.forEach(item => {
+  this.data.forEach(item => {
     delete item._id
     delete item._pid
     return item
@@ -75,7 +75,7 @@ DescLevelTreeData.prototype.setLevelArr = function () {
     })
   }
 
-  this.spreadsheetData.forEach(({
+  this.data.forEach(({
     _id, _pid
   }) => {
     if (_pid === this.rootLevelFlag || !!addedItemMap[_pid]) {
@@ -163,7 +163,7 @@ DescLevelTreeData.prototype.init = function () {
       ])
     })
   })
-  this.spreadsheetData.forEach(item => {
+  this.data.forEach(item => {
     item.treeDataValueRange = [
       ...this.ItemsMap[item._id].pos,
       getChildrenFarRightNode(item._id).pos[0],
@@ -178,7 +178,7 @@ const setLevelTreeDataRelationshipBySpreadsheetModel = function (arr, idKey, par
   descLevelTreeData.init()
   // descLevelTreeData.destroySpreadsheetModel()
   descLevelTreeData.destroy()
-  console.log('//////////////////////////////////////////////////////\n', descLevelTreeData.spreadsheetData)
+  console.log('///////////////descLevelTreeData////////////////////\n', descLevelTreeData)
 }
 
 export {
