@@ -1,12 +1,11 @@
 import { expect } from 'chai'
-import clonedeep from 'lodash.clonedeep'
 // import Handsontable from 'handsontable'
 
 import {
-  SetLevelTreeDataRelationshipBySpreadsheetModel as SetLevelTreeDate
+  setLevelTreeDataRelationshipBySpreadsheetModel as setLevelTreeDate
 } from '@/libs/levelTreeData'
 
-describe('SetLevelTreeDate', () => {
+describe('setLevelTreeDate', () => {
   const arr = [
     {
       id: 1,
@@ -40,14 +39,9 @@ describe('SetLevelTreeDate', () => {
       id: 2,
       pid: -1
     }]
-  const levelTreeDateObj = new SetLevelTreeDate(clonedeep(arr), 'id', 'pid')
-  console.log(levelTreeDateObj)
-  // it('item has key treeDataValueRange', () => {
-  //   const hasTreeDataValueRange = targetArr.every(item => item?.hasOwnProperty('treeDataValueRange'))
-  //   expect(hasTreeDataValueRange).be.equal(true)
-  // })
+  setLevelTreeDate(arr, 'id', 'pid')
   it('item has key treeDataValueRange', () => {
-    // levelTreeDateObj.hasOwnProperty('likeSpreadsheetArr')
-    expect(true).be.equal(true)
+    const hasTreeDataValueRange = arr.every(item => item?.hasOwnProperty('treeDataValueRange'))
+    expect(hasTreeDataValueRange).be.equal(true)
   })
 })
