@@ -27,7 +27,7 @@ function DescLevelTreeData (arr, idKey, parentIdKey) {
   this.idKey = idKey || 'id'
   this.parentIdKey = parentIdKey || 'parentId'
   this.sourceData = clonedeep(arr)
-  this.data = arr
+  this.data = clonedeep(arr)
   this.ItemsMap = null
   this.spreadsheetTreeArr = null
 }
@@ -170,17 +170,8 @@ DescLevelTreeData.prototype.init = function () {
       getChildrenMaxLevel(item._id)
     ]
   })
+
+  console.log('///////////////descLevelTreeData.data////////////////////\n', this.data)
 }
 
-const setLevelTreeDataRelationshipBySpreadsheetModel = function (arr, idKey, parentIdKey) {
-  const descLevelTreeData = new DescLevelTreeData(arr, idKey, parentIdKey)
-  descLevelTreeData.create()
-  descLevelTreeData.init()
-  // descLevelTreeData.destroySpreadsheetModel()
-  descLevelTreeData.destroy()
-  console.log('///////////////descLevelTreeData////////////////////\n', descLevelTreeData)
-}
-
-export {
-  setLevelTreeDataRelationshipBySpreadsheetModel
-}
+export default DescLevelTreeData
