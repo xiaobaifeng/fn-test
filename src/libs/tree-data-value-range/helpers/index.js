@@ -14,3 +14,8 @@ export function isLeafNode (treeDataValueRange) {
 export function isLevelNumber (treeDataValueRange, level) {
   return treeDataValueRange[1] === level
 }
+
+export function isCover (treeDataValueRangeA, treeDataValueRangeB) {
+  return (treeDataValueRangeA[0] <= treeDataValueRangeB[0] && treeDataValueRangeA[1] <= treeDataValueRangeB[1]) &&
+  (treeDataValueRangeA[2] >= treeDataValueRangeB[2] && treeDataValueRangeA[3] >= treeDataValueRangeB[3])
+}

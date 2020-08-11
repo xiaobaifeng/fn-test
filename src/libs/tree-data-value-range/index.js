@@ -10,8 +10,15 @@ class TreeDataValueRangeArr extends Array {
     return this.filter(({ treeDataValueRange }) => helpers.isLeafNode(treeDataValueRange))
   }
 
-  getNodesByLevel (level) {
+  getNodesByLevel (level = 0) {
     return this.filter(({ treeDataValueRange }) => helpers.isLevelNumber(treeDataValueRange, level))
+  }
+
+  getChildrenNodes (id) {
+    const targetNode = this.find(item => item.id === id)
+    return helpers.isLeafNode(targetNode.treeDataValueRange)
+      ? null
+      : this.filter(item => item.id !== id && helpers.isCover(targetNode.treeDataValueRange, item.treeDataValueRange))
   }
 }
 
