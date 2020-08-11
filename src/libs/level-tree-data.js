@@ -1,5 +1,5 @@
 import DescLevelTreeData from './desc-level-tree-data'
-import SpreadsheetModelHelper from './spreadsheet-model-hleper'
+import TreeDataValueRangeArr from './tree-data-value-range'
 
 const setLevelTreeDataRelationshipBySpreadsheetModel = function (arr, idKey, parentIdKey) {
   const descLevelTreeData = new DescLevelTreeData(arr, idKey, parentIdKey)
@@ -7,7 +7,7 @@ const setLevelTreeDataRelationshipBySpreadsheetModel = function (arr, idKey, par
   descLevelTreeData.init()
   // descLevelTreeData.destroySpreadsheetModel()
   descLevelTreeData.destroy()
-  return new SpreadsheetModelHelper(...descLevelTreeData.data)
+  return new TreeDataValueRangeArr(...descLevelTreeData.data)
 }
 
 export default setLevelTreeDataRelationshipBySpreadsheetModel
