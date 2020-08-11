@@ -61,6 +61,7 @@
 
 ### 功能目录
 
+```
 src
 ├─libs
 |  ├─array-utils.js
@@ -75,3 +76,4 @@ tests
 ├─unit
 |  ├─libs
 |  |  level-tree-data.spec.js
+```
