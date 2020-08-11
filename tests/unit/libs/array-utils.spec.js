@@ -9,9 +9,9 @@ import {
   isEqual2dArray,
   arrayAssign1d,
   arrayAssign2d
-} from '@/libs/arrayUtils'
+} from '@/libs/array-utils'
 
-describe('arrayUtils', () => {
+describe('array-utils', () => {
   // test is1dArray
   const testIs1dArray = ({ params, result, describe }) => {
     it('is1dArray.params:' + (describe || JSON.stringify(params)), () => {

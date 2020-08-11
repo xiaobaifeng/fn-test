@@ -1,6 +1,6 @@
 import clonedeep from 'lodash.clonedeep'
 
-import { isArray } from '@/libs/jsTypeUtil'
+import { isArray } from '@/libs/js-type-util'
 
 /**
  * 一维并且每个元素都不是引用类型数组的判断

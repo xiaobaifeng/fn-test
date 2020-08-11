@@ -1,7 +1,7 @@
 import clonedeep from 'lodash.clonedeep'
 
 import Handsontable from 'handsontable'
-import { arrayAssign2d } from './arrayUtils'
+import { arrayAssign2d } from './array-utils'
 
 /**
  * 转置
