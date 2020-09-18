@@ -30,6 +30,11 @@ function DescLevelTreeData (arr, idKey, parentIdKey) {
   this.data = clonedeep(arr)
   this.ItemsMap = null
   this.spreadsheetTreeArr = null
+  if (arr.length) {
+    this.create()
+    this.init()
+    this.destroy()
+  }
 }
 DescLevelTreeData.prototype.destroySpreadsheetModel = function () {
   delete this.rootLevelFlag
