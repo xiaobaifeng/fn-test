@@ -28,7 +28,7 @@ function DescLevelTreeData (arr, idKey, parentIdKey) {
   this.parentIdKey = parentIdKey || 'parentId'
   this.sourceData = clonedeep(arr)
   this.data = clonedeep(arr)
-  this.ItemsMap = null
+  this.itemMap = null
   this.spreadsheetTreeArr = null
   if (arr.length) {
     this.create()
@@ -54,7 +54,7 @@ DescLevelTreeData.prototype.destroy = function () {
     delete item._pos
     return item
   })
-  Object.values(this.ItemsMap).forEach(item => {
+  Object.values(this.itemMap).forEach(item => {
     item.children = item._children
     delete item._children
   })
@@ -112,7 +112,7 @@ DescLevelTreeData.prototype.setLevelArr = function () {
   if (errorMsg) {
     throw new Error(errorMsg)
   }
-  this.ItemsMap = clonedeep(addedItemMap)
+  this.itemMap = clonedeep(addedItemMap)
 }
 DescLevelTreeData.prototype.setSpreadsheetTreeArr = function () {
   /**
@@ -134,7 +134,7 @@ DescLevelTreeData.prototype.setSpreadsheetTreeArr = function () {
      * @return {[[String | Number]]}
      */
   const getTreeArr = (idArr, baseNode = []) => {
-    return idArr.map(id => this.ItemsMap[id]).reduce((acc, item, index) => {
+    return idArr.map(id => this.itemMap[id]).reduce((acc, item, index) => {
       const { _id } = item
       const oneRootNodeTreeArr = !item._children
         ? [getNotRepectBaseNode(baseNode, index).concat(_id)]
@@ -158,20 +158,20 @@ DescLevelTreeData.prototype.init = function () {
   console.log('//////////////////////////////////////////////////////\n', this.spreadsheetTreeArr)
   // 获取当前树节点下最右侧的子节点
   const getChildrenFarRightNode = (id) => {
-    return !this.ItemsMap[id]._children
-      ? this.ItemsMap[id]
-      : getChildrenFarRightNode(this.ItemsMap[id]._children[this.ItemsMap[id]._children.length - 1])
+    return !this.itemMap[id]._children
+      ? this.itemMap[id]
+      : getChildrenFarRightNode(this.itemMap[id]._children[this.itemMap[id]._children.length - 1])
   }
   const getChildrenMaxLevel = (id) => {
-    return !this.ItemsMap[id]._children
-      ? this.ItemsMap[id].level
-      : this.ItemsMap[id]._children.reduce(
+    return !this.itemMap[id]._children
+      ? this.itemMap[id].level
+      : this.itemMap[id]._children.reduce(
         (acc, item) => Math.max(acc, getChildrenMaxLevel(item)), 0
       )
   }
   this.spreadsheetTreeArr.forEach((item, colIndex) => {
     item.forEach((id, rowIndex) => {
-      id && (this.ItemsMap[id]._pos = [
+      id && (this.itemMap[id]._pos = [
         rowIndex,
         colIndex
       ])
@@ -179,7 +179,7 @@ DescLevelTreeData.prototype.init = function () {
   })
   this.data.forEach(item => {
     item.treeDataValueRange = [
-      ...this.ItemsMap[item._id]._pos,
+      ...this.itemMap[item._id]._pos,
       getChildrenFarRightNode(item._id)._pos[0],
       getChildrenMaxLevel(item._id)
     ]
