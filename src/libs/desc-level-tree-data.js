@@ -51,6 +51,7 @@ DescLevelTreeData.prototype.destroy = function () {
   this.data.forEach(item => {
     delete item._id
     delete item._pid
+    delete item._pos
     return item
   })
   Object.values(this.ItemsMap).forEach(item => {
