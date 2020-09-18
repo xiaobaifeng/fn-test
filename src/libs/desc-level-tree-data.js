@@ -170,7 +170,7 @@ DescLevelTreeData.prototype.init = function () {
   }
   this.spreadsheetTreeArr.forEach((item, colIndex) => {
     item.forEach((id, rowIndex) => {
-      id && (this.ItemsMap[id].pos = [
+      id && (this.ItemsMap[id]._pos = [
         rowIndex,
         colIndex
       ])
@@ -178,8 +178,8 @@ DescLevelTreeData.prototype.init = function () {
   })
   this.data.forEach(item => {
     item.treeDataValueRange = [
-      ...this.ItemsMap[item._id].pos,
-      getChildrenFarRightNode(item._id).pos[0],
+      ...this.ItemsMap[item._id]._pos,
+      getChildrenFarRightNode(item._id)._pos[0],
       getChildrenMaxLevel(item._id)
     ]
   })
