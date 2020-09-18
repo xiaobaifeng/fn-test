@@ -27,7 +27,7 @@ function DescLevelTreeData (arr, idKey, parentIdKey) {
   this.idKey = idKey || 'id'
   this.parentIdKey = parentIdKey || 'parentId'
   this.sourceData = clonedeep(arr)
-  this.data = clonedeep(arr)
+  this.data = arr
   this.itemMap = null
   this.spreadsheetTreeArr = null
   if (arr.length) {
@@ -85,26 +85,19 @@ DescLevelTreeData.prototype.setLevelArr = function () {
     })
   }
 
-  this.data.forEach(({
-    _id, _pid
-  }) => {
+  this.data.forEach((item) => {
+    const { _id, _pid } = item
     if (_pid === this.rootLevelFlag || !!addedItemMap[_pid]) {
       const curItemLevel =
         _pid === this.rootLevelFlag ? 0 : addedItemMap[_pid].level + 1
       addTreeDataItemLevel.call(this.likeSpreadsheetArr, _id, curItemLevel)
-      addedItemMap[_id] = Object.assign({
-        _id,
-        _pid
-      }, {
+      addedItemMap[_id] = Object.assign(item, {
         level: curItemLevel
       })
       if (addedItemMap[_pid]) addedItemMap[_pid]._children = (addedItemMap[_pid]._children || []).concat(_id)
       addwaitItemFn()
     } else {
-      waitItemMap[_pid] = {
-        _id,
-        _pid
-      }
+      waitItemMap[_pid] = item
     }
   })
   console.log(addedItemMap)
@@ -112,7 +105,7 @@ DescLevelTreeData.prototype.setLevelArr = function () {
   if (errorMsg) {
     throw new Error(errorMsg)
   }
-  this.itemMap = clonedeep(addedItemMap)
+  this.itemMap = addedItemMap
 }
 DescLevelTreeData.prototype.setSpreadsheetTreeArr = function () {
   /**
