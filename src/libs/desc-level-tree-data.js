@@ -103,6 +103,10 @@ DescLevelTreeData.prototype.setLevelArr = function () {
     }
   })
   console.log(addedItemMap)
+  const errorMsg = Object.values(waitItemMap).map(item => `子节点【id:${item._id}】的父节点【${item._pid}】不存在`).join('\n')
+  if (errorMsg) {
+    throw new Error(errorMsg)
+  }
   this.ItemsMap = clonedeep(addedItemMap)
 }
 DescLevelTreeData.prototype.setSpreadsheetTreeArr = function () {
