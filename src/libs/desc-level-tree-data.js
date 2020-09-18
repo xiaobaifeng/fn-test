@@ -53,6 +53,10 @@ DescLevelTreeData.prototype.destroy = function () {
     delete item._pid
     return item
   })
+  Object.values(this.ItemsMap).forEach(item => {
+    item.children = item._children
+    delete item._children
+  })
 }
 DescLevelTreeData.prototype.setLevelArr = function () {
   function addTreeDataItemLevel (id, level) {
@@ -74,7 +78,7 @@ DescLevelTreeData.prototype.setLevelArr = function () {
         addedItemMap[waitItemMap[pidKey]._id] = Object.assign(waitItemMap[pidKey], {
           level: addedItemMap[pidKey].level + 1
         })
-        addedItemMap[pidKey].children = (addedItemMap[pidKey].children || []).concat(waitItemMap[pidKey]._id)
+        addedItemMap[pidKey]._children = (addedItemMap[pidKey]._children || []).concat(waitItemMap[pidKey]._id)
         delete waitItemMap[pidKey]
       }
     })
@@ -93,7 +97,7 @@ DescLevelTreeData.prototype.setLevelArr = function () {
       }, {
         level: curItemLevel
       })
-      if (addedItemMap[_pid]) addedItemMap[_pid].children = (addedItemMap[_pid].children || []).concat(_id)
+      if (addedItemMap[_pid]) addedItemMap[_pid]._children = (addedItemMap[_pid]._children || []).concat(_id)
       addwaitItemFn()
     } else {
       waitItemMap[_pid] = {
@@ -131,9 +135,9 @@ DescLevelTreeData.prototype.setSpreadsheetTreeArr = function () {
   const getTreeArr = (idArr, baseNode = []) => {
     return idArr.map(id => this.ItemsMap[id]).reduce((acc, item, index) => {
       const { _id } = item
-      const oneRootNodeTreeArr = !item.children
+      const oneRootNodeTreeArr = !item._children
         ? [getNotRepectBaseNode(baseNode, index).concat(_id)]
-        : getTreeArr(item.children, baseNode.concat(_id))
+        : getTreeArr(item._children, baseNode.concat(_id))
       return acc.concat(oneRootNodeTreeArr)
     }, [])
   }
@@ -153,14 +157,14 @@ DescLevelTreeData.prototype.init = function () {
   console.log('//////////////////////////////////////////////////////\n', this.spreadsheetTreeArr)
   // 获取当前树节点下最右侧的子节点
   const getChildrenFarRightNode = (id) => {
-    return !this.ItemsMap[id].children
+    return !this.ItemsMap[id]._children
       ? this.ItemsMap[id]
-      : getChildrenFarRightNode(this.ItemsMap[id].children[this.ItemsMap[id].children.length - 1])
+      : getChildrenFarRightNode(this.ItemsMap[id]._children[this.ItemsMap[id]._children.length - 1])
   }
   const getChildrenMaxLevel = (id) => {
-    return !this.ItemsMap[id].children
+    return !this.ItemsMap[id]._children
       ? this.ItemsMap[id].level
-      : this.ItemsMap[id].children.reduce(
+      : this.ItemsMap[id]._children.reduce(
         (acc, item) => Math.max(acc, getChildrenMaxLevel(item)), 0
       )
   }
