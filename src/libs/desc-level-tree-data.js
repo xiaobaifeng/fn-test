@@ -6,7 +6,7 @@ import { arrayAssign2d } from './array-utils'
 /**
  * 转置
  * @param {[[String | Number]]} arr
- * @return {[[String | Number]]}
+ * @returns [[String | Number]]
  */
 function transposition (arr) {
   return arr[0].map((item, index) => {
@@ -112,7 +112,7 @@ DescLevelTreeData.prototype.setSpreadsheetTreeArr = function () {
      * 非叶子节点第二次出现为undefined
      * @param {[String | Number]} baseNode
      * @param {Number} index
-     * @return {[String | Number | undefined]}
+     * @returns [String | Number | undefined]
      */
   function getNotRepectBaseNode (baseNode, index) {
     return baseNode.length > 0 && index === 0
@@ -124,7 +124,7 @@ DescLevelTreeData.prototype.setSpreadsheetTreeArr = function () {
      *
      * @param {[String | Number]} idArr
      * @param {[String | Number | [String | Number]]} baseNode
-     * @return {[[String | Number]]}
+     * @returns [[String | Number]]
      */
   const getTreeArr = (idArr, baseNode = []) => {
     return idArr.map(id => this.itemMap[id]).reduce((acc, item, index) => {
