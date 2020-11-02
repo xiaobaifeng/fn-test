@@ -69,18 +69,23 @@ DescLevelTreeData.prototype.setLevelArr = function () {
   const waitItemMap = {}
 
   const addwaitItemFn = () => {
-    Object.keys(waitItemMap).forEach((pidKey) => {
+    Object.keys(waitItemMap).forEach((idKey) => {
+      if (!waitItemMap[idKey]) {
+        return
+      }
+      const pidKey = waitItemMap[idKey]._pid
       if (addedItemMap[pidKey]) {
         addTreeDataItemLevel.call(
           this.likeSpreadsheetArr,
-          waitItemMap[pidKey]._id,
+          waitItemMap[idKey]._id,
           addedItemMap[pidKey].level + 1
         )
-        addedItemMap[waitItemMap[pidKey]._id] = Object.assign(waitItemMap[pidKey], {
+        addedItemMap[waitItemMap[idKey]._id] = Object.assign(waitItemMap[idKey], {
           level: addedItemMap[pidKey].level + 1
         })
-        addedItemMap[pidKey]._children = (addedItemMap[pidKey]._children || []).concat(waitItemMap[pidKey]._id)
-        delete waitItemMap[pidKey]
+        addedItemMap[pidKey]._children = (addedItemMap[pidKey]._children || []).concat(waitItemMap[idKey]._id)
+        delete waitItemMap[idKey]
+        if (Object.keys(waitItemMap).length) addwaitItemFn()
       }
     })
   }
@@ -97,7 +102,7 @@ DescLevelTreeData.prototype.setLevelArr = function () {
       if (addedItemMap[_pid]) addedItemMap[_pid]._children = (addedItemMap[_pid]._children || []).concat(_id)
       addwaitItemFn()
     } else {
-      waitItemMap[_pid] = item
+      waitItemMap[_id] = item
     }
   })
   console.log(addedItemMap)
