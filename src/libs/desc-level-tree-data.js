@@ -55,8 +55,10 @@ DescLevelTreeData.prototype.destroy = function () {
     return item
   })
   Object.values(this.itemMap).forEach(item => {
-    item.children = item._children
-    delete item._children
+    if (item._children) {
+      item.children = item._children
+      delete item._children
+    }
   })
 }
 DescLevelTreeData.prototype.setLevelArr = function () {
