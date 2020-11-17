@@ -49,17 +49,25 @@ DescLevelTreeData.prototype.create = function () {
 }
 DescLevelTreeData.prototype.destroy = function () {
   this.data.forEach(item => {
+    item.level = item._level
+    if (item._children?.length) {
+      item.children = [...item._children]
+    }
     delete item._id
     delete item._pid
     delete item._pos
+    delete item._level
+    delete item._children
     return item
   })
-  Object.values(this.itemMap).forEach(item => {
-    if (item._children) {
-      item.children = item._children
-      delete item._children
-    }
-  })
+  // Object.values(this.itemMap).forEach(item => {
+  //   if (item._children) {
+  //     item.children = item._children
+  //     delete item._children
+  //   }
+  //   item.level = item._level
+  //   delete item._level
+  // })
 }
 DescLevelTreeData.prototype.setLevelArr = function () {
   function addTreeDataItemLevel (id, level) {
@@ -80,10 +88,10 @@ DescLevelTreeData.prototype.setLevelArr = function () {
         addTreeDataItemLevel.call(
           this.likeSpreadsheetArr,
           waitItemMap[idKey]._id,
-          addedItemMap[pidKey].level + 1
+          addedItemMap[pidKey]._level + 1
         )
         addedItemMap[waitItemMap[idKey]._id] = Object.assign(waitItemMap[idKey], {
-          level: addedItemMap[pidKey].level + 1
+          _level: addedItemMap[pidKey]._level + 1
         })
         addedItemMap[pidKey]._children = (addedItemMap[pidKey]._children || []).concat(waitItemMap[idKey]._id)
         delete waitItemMap[idKey]
@@ -96,10 +104,10 @@ DescLevelTreeData.prototype.setLevelArr = function () {
     const { _id, _pid } = item
     if (_pid === this.rootLevelFlag || !!addedItemMap[_pid]) {
       const curItemLevel =
-        _pid === this.rootLevelFlag ? 0 : addedItemMap[_pid].level + 1
+        _pid === this.rootLevelFlag ? 0 : addedItemMap[_pid]._level + 1
       addTreeDataItemLevel.call(this.likeSpreadsheetArr, _id, curItemLevel)
       addedItemMap[_id] = Object.assign(item, {
-        level: curItemLevel
+        _level: curItemLevel
       })
       if (addedItemMap[_pid]) addedItemMap[_pid]._children = (addedItemMap[_pid]._children || []).concat(_id)
       addwaitItemFn()
@@ -164,7 +172,7 @@ DescLevelTreeData.prototype.init = function () {
   }
   const getChildrenMaxLevel = (id) => {
     return !this.itemMap[id]._children
-      ? this.itemMap[id].level
+      ? this.itemMap[id]._level
       : this.itemMap[id]._children.reduce(
         (acc, item) => Math.max(acc, getChildrenMaxLevel(item)), 0
       )
