@@ -19,7 +19,7 @@ function transposition (arr) {
  *  通过二维数组模型解决获取树形平铺数据节点关系 (x, y):(rowIndex, colIndex)
  */
 function DescLevelTreeData (arr, idKey, parentIdKey) {
-  console.log('//////////////////////////////////////////////////////\n', arr)
+  //  console.log('//////////////////////////////////////////////////////\n', arr)
   // 根节点标识
   this.rootLevelFlag = -1
   // 二维数组模型
@@ -141,19 +141,19 @@ DescLevelTreeData.prototype.setSpreadsheetTreeArr = function () {
     }, [])
   }
   const treeArr = getTreeArr(this.likeSpreadsheetArr[0])
-  console.log('//////////////////////////////////////////////////////\n', this.likeSpreadsheetArr)
+  //  console.log('//////////////////////////////////////////////////////\n', this.likeSpreadsheetArr)
   // ele[0] = undefined
   const emptySpreadsheetData = Handsontable.helper.createEmptySpreadsheetData(
     treeArr.length,
     this.likeSpreadsheetArr.length // treeArr里子数组的最大长度
   ).map(ele => ele.fill())
-  console.log('//////////////////////////////////////////////////////\n', arrayAssign2d(emptySpreadsheetData, treeArr))
+  //  console.log('//////////////////////////////////////////////////////\n', arrayAssign2d(emptySpreadsheetData, treeArr))
   this.spreadsheetTreeArr = transposition(arrayAssign2d(emptySpreadsheetData, treeArr))
 }
 DescLevelTreeData.prototype.init = function () {
   this.setLevelArr()
   this.setSpreadsheetTreeArr()
-  console.log('//////////////////////////////////////////////////////\n', this.spreadsheetTreeArr)
+  //  console.log('//////////////////////////////////////////////////////\n', this.spreadsheetTreeArr)
   // 获取当前树节点下最右侧的子节点
   const getChildrenFarRightNode = (id) => {
     return !this.itemMap[id]._children
@@ -183,7 +183,7 @@ DescLevelTreeData.prototype.init = function () {
     ]
   })
 
-  console.log('///////////////descLevelTreeData.data////////////////////\n', this.data)
+  //  console.log('///////////////descLevelTreeData.data////////////////////\n', this.data)
 }
 
 export default DescLevelTreeData
