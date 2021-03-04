@@ -1,26 +1,31 @@
-/* eslint-disable no-unexpected-multiline */
 import { expect } from 'chai'
+import dayjs from 'dayjs'
 
 import { getLastestCompletedPeriodRange } from '@/libs/ec-utils'
 
-const testParamsTxt = {
-  dateString: '统计时间',
-  yearEnd: '年截止日期',
-  monthEnd: '月截止日期',
-  periodStartDateString: '最新已完成统计的账期开始时间',
-  periodEndDateString: '最新已完成统计的账期结束时间'
-}
+/**
+ * @typedef {object} testParamsTxt
+ * @property {string} dateString 统计时间
+ * @property {Number} yearEnd 年截止日期
+ * @property {Number} monthEnd 月截止日期
+ * @property {string} periodStartDateString 最新已完成统计的账期开始时间
+ * @property {string} periodEndDateString 最新已完成统计的账期结束时间
+ */
 
 describe('获取目标时间点最新已完成统计的账期的起始时间', () => {
-  function testGetLastestCompletedPeriodRange ({
-    dateString,
-    yearEnd,
-    monthEnd,
-    periodStartDateString,
-    periodEndDateString
-  }, prefixDesc) {
+  function testGetLastestCompletedPeriodRange (
+    /**
+     * @param {testParamsTxt} testParams
+     */
+    {
+      dateString,
+      yearEnd,
+      monthEnd,
+      periodStartDateString,
+      periodEndDateString
+    }, prefixDesc) {
     // eslint-disable-next-line no-undef
-    it(`${prefixDesc}\n       ${Object.keys(arguments[0]).map(key => `${testParamsTxt[key] || key}: ${arguments[0][key]},`).join('\n       ')}`, () => {
+    it(`${prefixDesc}`, () => {
       const lastestCompletedPeriodRange = getLastestCompletedPeriodRange(
         new Date(dateString),
         {
@@ -28,8 +33,16 @@ describe('获取目标时间点最新已完成统计的账期的起始时间', (
           monthEnd: monthEnd
         }
       )
-      expect(lastestCompletedPeriodRange.periodStartDate.toLocaleDateString()).to.equal(periodStartDateString)
-      expect(lastestCompletedPeriodRange.periodEndDate.toLocaleDateString()).to.equal(periodEndDateString)
+      expect(
+        dayjs(
+          lastestCompletedPeriodRange.periodStartDate
+        ).format('YYYY-M-D')
+      ).equal(periodStartDateString)
+      expect(
+        dayjs(
+          lastestCompletedPeriodRange.periodEndDate
+        ).format('YYYY-M-D')
+      ).equal(periodEndDateString)
     })
   }
   [{
